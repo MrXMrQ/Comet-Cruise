@@ -10,10 +10,10 @@ public class MainMenu {
     //Labels
     JLabel playerLabel;
     Asteroid asteroid;
-    Asteroid[] asteroidsArray = new Asteroid[10];
 
     boolean left;
     boolean right;
+    boolean asteroidDestroyed = true;
 
     Thread mainMenuWindowThread;
     Thread collisonThread;
@@ -29,8 +29,6 @@ public class MainMenu {
         collisonThread = new Thread(this::collision);
 
         asteroidMoverThread = new Thread(this::asteroidMover);
-
-        asteroidDetectedThread = new Thread(this::asteroidDetected);
     }
 
     public void mainMenuWindow() {
@@ -58,56 +56,44 @@ public class MainMenu {
                 }
             }
         });
-        asteroidsArray = asteroidGen();
-
         collisonThread.start();
         asteroidMoverThread.start();
-        asteroidDetectedThread.start();
-
         myFrame.getContentPane().setBackground(Color.BLACK);
     }
 
     public void collision() {
         while (collisonThread.isAlive()) {
-            if (playerLabel.getX() <= myFrame.getY() || playerLabel.getX() + playerLabel.getWidth() >= myFrame.getWidth() || asteroidDetected()) {
+            if (playerLabel.getX() <= myFrame.getY() || playerLabel.getX() + playerLabel.getWidth() >= myFrame.getWidth()) {
                 myFrame.remove(playerLabel);
-            } else if (asteroidsArray[index].getY() <= myFrame.getHeight()) {
-                asteroidsArray[index].setLocation(asteroidsArray[index].getX(), 0);
             }
         }
     }
 
-    public Asteroid[] asteroidGen() {
-        for (int i = 0; i < asteroidsArray.length; i++) {
-            asteroidsArray[i] = new Asteroid();
-            myFrame.add(asteroidsArray[i]);
+    public void asteroidGen() {
+        if (asteroidDestroyed) {
+            asteroidDestroyed = false;
+            asteroid = new Asteroid();
+            myFrame.add(asteroid);
             SwingUtilities.updateComponentTreeUI(myFrame);
         }
-        return asteroidsArray;
     }
 
     public void asteroidMover() {
         while (asteroidMoverThread.isAlive()) {
-            if (index == asteroidsArray.length) {
-                index = 0;
-            }
-            asteroidsArray[index].setLocation(asteroidsArray[index].getX(), asteroidsArray[index].getY() + 10);
-            index++;
-            SwingUtilities.updateComponentTreeUI(myFrame);
+            try {
+                asteroidGen();
+                asteroid.setLocation(asteroid.getX(), asteroid.getY() + 10);
+                SwingUtilities.updateComponentTreeUI(myFrame);
 
-
-        }
-    }
-
-    public boolean asteroidDetected() {
-        while (asteroidDetectedThread.isAlive()) {
-            for (int i = 0; i < asteroidsArray.length; i++) {
-                if (asteroidsArray[i].equals(playerLabel.getLocation())) {
-                    return true;
+                if (asteroid.getY() > myFrame.getHeight()) {
+                    myFrame.remove(asteroid);
+                    asteroidDestroyed = true;
+                    SwingUtilities.updateComponentTreeUI(myFrame);
                 }
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            return false;
         }
-        return false;
     }
 }
