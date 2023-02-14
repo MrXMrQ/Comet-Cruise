@@ -15,7 +15,7 @@ public class MyFrame extends JFrame {
     /*public void paint(Graphics g) {
         for (int i = 0; i < 1000; i++) {
             g.setColor(Color.WHITE);
-            g.fillRect((int)(Math.random()*400),(int)(Math.random()*900),1,1);
+            g.fillRect((int)(Math.random()*600),(int)(Math.random()*800),1,1);
         }
     }*/
 }
