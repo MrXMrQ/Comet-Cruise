@@ -9,18 +9,19 @@ public class MainMenu {
 
     //Labels
     JLabel playerLabel;
-    Asteroid asteroid;
+    Asteroid asteroid = new Asteroid();
 
+    //Booleans
     boolean left;
     boolean right;
     boolean asteroidDestroyed = true;
 
+    //Threads
     Thread mainMenuWindowThread;
     Thread collisonThread;
     Thread asteroidMoverThread;
-    Thread asteroidDetectedThread;
 
-    int index = 0;
+    int difficulty = 100;
 
     public MainMenu() {
         mainMenuWindowThread = new Thread(this::mainMenuWindow);
@@ -29,6 +30,7 @@ public class MainMenu {
         collisonThread = new Thread(this::collision);
 
         asteroidMoverThread = new Thread(this::asteroidMover);
+
     }
 
     public void mainMenuWindow() {
@@ -38,7 +40,12 @@ public class MainMenu {
         playerLabel.setBounds(150, 600, 100, 100);
         playerLabel.setBackground(Color.GRAY);
         playerLabel.setOpaque(true);
+
+        asteroidMoverThread.start();
+        collisonThread.start();
+
         myFrame.add(playerLabel);
+        myFrame.getContentPane().setBackground(Color.BLACK);
         myFrame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -56,15 +63,14 @@ public class MainMenu {
                 }
             }
         });
-        collisonThread.start();
-        asteroidMoverThread.start();
-        myFrame.getContentPane().setBackground(Color.BLACK);
     }
 
     public void collision() {
         while (collisonThread.isAlive()) {
             if (playerLabel.getX() <= myFrame.getY() || playerLabel.getX() + playerLabel.getWidth() >= myFrame.getWidth()) {
-                myFrame.remove(playerLabel);
+                System.exit(1);
+            } else if(playerLabel.bounds().intersects(asteroid.getBounds())) {
+                System.exit(1);
             }
         }
     }
@@ -88,9 +94,13 @@ public class MainMenu {
                 if (asteroid.getY() > myFrame.getHeight()) {
                     myFrame.remove(asteroid);
                     asteroidDestroyed = true;
+                    if(difficulty > 0) {
+                        difficulty--;
+                        System.out.println(difficulty);
+                    }
                     SwingUtilities.updateComponentTreeUI(myFrame);
                 }
-                Thread.sleep(100);
+                Thread.sleep(difficulty);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
