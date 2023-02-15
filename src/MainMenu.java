@@ -71,7 +71,7 @@ public class MainMenu {
                     }
 
                 }
-                if(e.getKeyChar() == 'w' && asteroid.getBackground() == Color.GREEN && counterTimesClicked <3 && !collisonThread.isInterrupted()) {
+                if(e.getKeyChar() == 'w' && asteroid.getBackground() == Color.YELLOW && counterTimesClicked <3 && !collisonThread.isInterrupted()) {
                     score+=100;
                     counterTimesClicked++;
                     SwingUtilities.updateComponentTreeUI(myFrame);
@@ -118,9 +118,9 @@ public class MainMenu {
     public void asteroidGen() {
         if (asteroidDestroyed) {
             asteroidDestroyed = false;
-            if ((int) (Math.random() * 100) > 95) {
+            if ((int) (Math.random() * 100) > 50) {
                 asteroid = new Asteroid();
-                asteroid.setBackground(Color.GREEN);
+                asteroid.setBackground(Color.YELLOW);
             } else {
                 asteroid = new Asteroid();
             }
