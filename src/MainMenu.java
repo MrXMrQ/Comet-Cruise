@@ -12,12 +12,19 @@ public class MainMenu {
     //Labels
     JLabel playerLabel;
     Asteroid asteroid = new Asteroid();
+    Asteroid asteroid1 = new Asteroid();
+    Asteroid asteroid2 = new Asteroid();
+    Asteroid asteroid3 = new Asteroid();
+
     JLabel timeLabel;
 
     //Booleans
     boolean left;
     boolean right;
     boolean asteroidDestroyed = true;
+    boolean asteroid1Destroyed = true;
+    boolean asteroid2Destroyed = true;
+    boolean asteroid3Destroyed = true;
 
     //Threads
     Thread mainMenuWindowThread;
@@ -26,9 +33,10 @@ public class MainMenu {
     Thread timerThread;
 
     int difficulty = 50;
-    int timer = 20;
+    int timer = 120;
     int score = 0;
     int counterTimesClicked = 0;
+    int movementSpeed = 10;
 
     File newFile = new File("score.txt");
 
@@ -47,7 +55,7 @@ public class MainMenu {
         myFrame = new MyFrame();
         scoreReader(newFile);
         playerLabel = new JLabel("PLAYER", SwingUtilities.CENTER);
-        playerLabel.setBounds(150, 600, 100, 100);
+        playerLabel.setBounds(150, 600, 70, 70);
         playerLabel.setBackground(Color.GRAY);
         playerLabel.setOpaque(true);
 
@@ -60,19 +68,18 @@ public class MainMenu {
             public void keyTyped(KeyEvent e) {
                 switch (e.getKeyChar()) {
                     case 'a' -> {
-                        playerLabel.setLocation(playerLabel.getX() - 10, playerLabel.getY());
+                        playerLabel.setLocation(playerLabel.getX() - movementSpeed, playerLabel.getY());
                         right = false;
                         left = true;
                     }
                     case 'd' -> {
-                        playerLabel.setLocation(playerLabel.getX() + 10, playerLabel.getY());
+                        playerLabel.setLocation(playerLabel.getX() + movementSpeed, playerLabel.getY());
                         right = false;
                         left = true;
                     }
-
                 }
-                if(e.getKeyChar() == 'w' && asteroid.getBackground() == Color.YELLOW && counterTimesClicked <3 && !collisonThread.isInterrupted()) {
-                    score+=100;
+                if (e.getKeyChar() == 'w' && asteroid.getBackground() == Color.YELLOW && counterTimesClicked < 3 && !collisonThread.isInterrupted()) {
+                    score += 100;
                     counterTimesClicked++;
                     SwingUtilities.updateComponentTreeUI(myFrame);
                 }
@@ -109,7 +116,7 @@ public class MainMenu {
         while (!collisonThread.isInterrupted()) {
             if (playerLabel.getX() <= myFrame.getY() || playerLabel.getX() + playerLabel.getWidth() >= myFrame.getWidth()) {
                 System.exit(1);
-            } else if (playerLabel.bounds().intersects(asteroid.getBounds())) {
+            } else if (playerLabel.bounds().intersects(asteroid.getBounds()) || playerLabel.bounds().intersects(asteroid1.getBounds()) || playerLabel.bounds().intersects(asteroid2.getBounds()) || playerLabel.bounds().intersects(asteroid3.getBounds())) {
                 System.exit(1);
             }
         }
@@ -118,34 +125,60 @@ public class MainMenu {
     public void asteroidGen() {
         if (asteroidDestroyed) {
             asteroidDestroyed = false;
-            if ((int) (Math.random() * 100) > 50) {
+            if ((int) (Math.random() * 100) > 0) {
                 asteroid = new Asteroid();
                 asteroid.setBackground(Color.YELLOW);
             } else {
                 asteroid = new Asteroid();
             }
             myFrame.add(asteroid);
-            SwingUtilities.updateComponentTreeUI(myFrame);
+        } else if (asteroid1Destroyed) {
+            asteroid1Destroyed = false;
+            asteroid1 = new Asteroid();
+            myFrame.add(asteroid1);
+
+        } else if (asteroid2Destroyed) {
+            asteroid2Destroyed = false;
+            asteroid2 = new Asteroid();
+            myFrame.add(asteroid2);
+
+        } else if (asteroid3Destroyed) {
+            asteroid3Destroyed = false;
+            asteroid3 = new Asteroid();
+            myFrame.add(asteroid3);
         }
+        SwingUtilities.updateComponentTreeUI(myFrame);
     }
 
     public void asteroidMover() {
         while (asteroidMoverThread.isAlive()) {
             try {
                 asteroidGen();
-                asteroid.setLocation(asteroid.getX(), asteroid.getY() + 10);
+                asteroid.setLocation(asteroid.getX(), asteroid.getY() + 8);
+                asteroid1.setLocation(asteroid1.getX(), asteroid1.getY() + 5);
+                asteroid2.setLocation(asteroid2.getX(), asteroid2.getY() + 16);
+                asteroid3.setLocation(asteroid3.getX(), asteroid3.getY() + 12);
 
                 if (asteroid.getY() > myFrame.getHeight()) {
                     myFrame.remove(asteroid);
-                    counterTimesClicked = 0;
                     asteroidDestroyed = true;
-                    if (!timeLabel.getText().equals("VICTORY")) {
-                        score += 10;
-                    }
-                    if (difficulty > 0) {
-                        difficulty--;
-                    }
-                    SwingUtilities.updateComponentTreeUI(myFrame);
+                    counterTimesClicked = 0;
+                    destroyedAsteroid();
+
+                } else if (asteroid1.getY() > myFrame.getHeight()) {
+                    myFrame.remove(asteroid1);
+                    asteroid1Destroyed = true;
+                    destroyedAsteroid();
+
+                } else if (asteroid2.getY() > myFrame.getHeight()) {
+                    myFrame.remove(asteroid2);
+                    asteroid2Destroyed = true;
+                    destroyedAsteroid();
+
+                } else if (asteroid3.getY() > myFrame.getHeight()) {
+                    myFrame.remove(asteroid3);
+                    asteroid3Destroyed = true;
+                    destroyedAsteroid();
                 }
                 Thread.sleep(difficulty);
             } catch (InterruptedException e) {
@@ -172,5 +205,19 @@ public class MainMenu {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void destroyedAsteroid() {
+        if (!timeLabel.getText().equals("VICTORY")) {
+            score += 10;
+        }
+        if (difficulty > 10) {
+            difficulty--;
+        }
+        if (movementSpeed < 40) {
+            movementSpeed++;
+            System.out.println(movementSpeed);
+        }
+        SwingUtilities.updateComponentTreeUI(myFrame);
     }
 }
