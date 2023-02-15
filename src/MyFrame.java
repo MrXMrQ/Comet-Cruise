@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class MyFrame extends JFrame {
     public MyFrame() {
@@ -11,11 +10,4 @@ public class MyFrame extends JFrame {
         setLayout(null);
 
     }
-
-    /*public void paint(Graphics g) {
-        for (int i = 0; i < 1000; i++) {
-            g.setColor(Color.WHITE);
-            g.fillRect((int)(Math.random()*600),(int)(Math.random()*800),1,1);
-        }
-    }*/
 }
