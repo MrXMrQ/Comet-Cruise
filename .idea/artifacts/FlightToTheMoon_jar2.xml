@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FlightToTheMoon:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/FlightToTheMoon_jar2</output-path>
+    <root id="archive" name="FlightToTheMoon.jar">
+      <element id="module-output" name="FlightToTheMoon" />
+    </root>
+  </artifact>
+</component>

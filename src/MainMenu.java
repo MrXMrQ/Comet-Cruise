@@ -32,11 +32,11 @@ public class MainMenu {
     Thread asteroidMoverThread;
     Thread timerThread;
 
-    int difficulty = 50;
+    int difficulty = 70;
     int timer = 120;
     int score = 0;
     int counterTimesClicked = 0;
-    int movementSpeed = 10;
+    int movementSpeed = 20;
 
     File newFile = new File("score.txt");
 
