@@ -33,7 +33,7 @@ public class MainMenu {
     Thread timerThread;
 
     int difficulty = 70;
-    int timer = 120;
+    int timer = 30;
     int score = 0;
     int counterTimesClicked = 0;
     int movementSpeed = 20;
