@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FlightToTheMoon.iml" filepath="$PROJECT_DIR$/FlightToTheMoon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flight_to_the_moon.iml" filepath="$PROJECT_DIR$/flight_to_the_moon.iml" />
     </modules>
   </component>
 </project>

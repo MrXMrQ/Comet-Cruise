@@ -2,7 +2,7 @@
   <artifact type="jar" name="FlightToTheMoon:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/FlightToTheMoon_jar</output-path>
     <root id="archive" name="FlightToTheMoon.jar">
-      <element id="module-output" name="FlightToTheMoon" />
+      <element id="module-output" name="flight_to_the_moon" />
     </root>
   </artifact>
 </component>
